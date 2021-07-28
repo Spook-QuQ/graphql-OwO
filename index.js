@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-const graphiqlHTML = fs.readFileSync(path.resolve(__dirname, './graphiql.html'))
+const graphiqlHTML = fs.readFileSync(path.resolve(__dirname, './static/graphiql.html'))
 
 const {
   graphql,
