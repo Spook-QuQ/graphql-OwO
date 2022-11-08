@@ -12,7 +12,7 @@ const schema: Schema = {
       fields: {
         rs: 'string',
       },
-      resolve: () => ({ rs: 'test!!!!' }),
+      resolver: () => ({ rs: 'test!!!!' }),
     },
   ],
   mutation: [
@@ -37,7 +37,7 @@ const schema: Schema = {
           },
         },
       },
-      resolve: (_) => {},
+      resolver: (_) => {},
     },
     {
       name: 'translate',
@@ -74,7 +74,7 @@ const schema: Schema = {
           nonNull: true,
         },
       },
-      resolve: (args) => {
+      resolver: (args) => {
       },
     },
   ],

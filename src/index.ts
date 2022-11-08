@@ -25,8 +25,8 @@ export type ArgumentsField<T = any> = {
   }
 }
 
-type Resolver<T = any> = (args: T) => any // 🍄
-type ListResolver<T = any> = (args: T) => Array<any> // 🍄
+type Resolver<T = any> = (args: T) => any
+type ListResolver<T = any> = (args: T) => Array<any>
 
 export type QueryType = {
   name?: string
@@ -35,11 +35,11 @@ export type QueryType = {
   typeDescription?: string
   fields: Field
   args?: ArgumentsField
-  resolve: Resolver
+  resolver: Resolver
   list?: boolean
   listDescription?: string
   listArgs?: ArgumentsField
-  listResolve?: ListResolver
+  listResolver?: ListResolver
 }
 
 type Description = {
@@ -64,14 +64,14 @@ const createRootType = (
     type: GraphQLObjectType<any, any>
     description: string
     args: ArgumentsType
-    resolve: Resolver<ArgumentsType>
+    resolver: Resolver<ArgumentsType>
   }
-  
+
   type ContxtForPlural = {
     type: GraphQLList<GraphQLObjectType<any, any>>
     description: string
     args: ArgumentsType
-    resolve: ListResolver<ArgumentsType>
+    resolver: ListResolver<ArgumentsType>
   }
 
   type RsQueries = {
@@ -79,7 +79,6 @@ const createRootType = (
   }
 
   const rsQueries: RsQueries = types.reduce((rsQuery, type: QueryType) => {
-
     const args = Object.keys(type.args || {}).length
       ? createArgs(type.args)
       : null
@@ -91,9 +90,9 @@ const createRootType = (
       description: type.description,
       args,
       resolve:
-        typeof type.resolve === 'function'
+        typeof type.resolver === 'function'
           ? (((_, args) => {
-              return type.resolve(args)
+              return type.resolver(args)
             }) as Resolver)
           : null,
     }
@@ -106,9 +105,9 @@ const createRootType = (
         description: type.listDescription,
         args: createArgs(type.listArgs),
         resolve:
-          typeof type.listResolve === 'function'
+          typeof type.listResolver === 'function'
             ? (((_, args) => {
-                return type.resolve(args)
+                return type.resolver(args)
               }) as ListResolver)
             : null,
       }
@@ -147,10 +146,7 @@ const createSchema = (
 }
 
 export default class GraphqlOwO {
-  run: (
-    _query: any,
-    _variables: any,
-  ) => Promise<any>
+  run: (_query: any, _variables: any) => Promise<any>
 
   constructor(_schema: Schema) {
     const THIS = Symbol('THIS')
