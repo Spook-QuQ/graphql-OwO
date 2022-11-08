@@ -1,30 +1,9 @@
-import GraphqlOwO, { Schema, QueryType, ArgumentField } from '../index'
-
-const testArgs = {
-  from: { type: 'string' },
-  to: { type: 'string', nonNull: true },
-  text: { type: 'string', nonNull: true },
-  testList: { type: [{ testKey: { type: ['string'], nonNull: true } }] },
-  testList2: { type: ['string'], nonNull: true },
-  test: {
-    type: {
-      a: {
-        type: {
-          c: {
-            type: {
-              e: { type: 'int', nonNull: false },
-            },
-            nonNull: true,
-          },
-          d: { type: 'string' },
-        },
-        nonNull: true,
-      },
-      b: { type: 'string', nonNull: false },
-    },
-    nonNull: true,
-  },
-}
+import GraphqlOwO, {
+  Schema,
+  QueryType,
+  ArgumentsField,
+  graphiqlHTML,
+} from '../index'
 
 const schema: Schema = {
   query: [
@@ -33,7 +12,7 @@ const schema: Schema = {
       fields: {
         rs: 'string',
       },
-      resolve: () => {},
+      resolve: () => ({ rs: 'test!!!!' }),
     },
   ],
   mutation: [
@@ -70,8 +49,33 @@ const schema: Schema = {
         // splitedText: 'string'
         splitedRsText: 'string',
       },
-      args: testArgs as ArgumentField,
-      resolve: (args) => {},
+      args: {
+        from: { type: 'string' },
+        to: { type: 'string', nonNull: true },
+        text: { type: 'string', nonNull: true },
+        testList: { type: [{ testKey: { type: ['string'], nonNull: true } }] },
+        testList2: { type: ['string'], nonNull: true },
+        test: {
+          type: {
+            a: {
+              type: {
+                c: {
+                  type: {
+                    e: { type: 'int', nonNull: false },
+                  },
+                  nonNull: true,
+                },
+                d: { type: 'string' },
+              },
+              nonNull: true,
+            },
+            b: { type: 'string', nonNull: false },
+          },
+          nonNull: true,
+        },
+      },
+      resolve: (args) => {
+      },
     },
   ],
   description: {
@@ -82,12 +86,14 @@ const schema: Schema = {
 
 const graphqlOwO = new GraphqlOwO(schema)
 
-module.exports = async (req, res) => {
-  if (req.method == 'POST') {
-    const { query, variables } = req.body
-    graphqlOwO.run(query, variables).then((rs) => {
-      const data = rs.data
-      res.send({ data } || {})
-    })
-  }
-}
+module.exports = { graphqlOwO, graphiqlHTML }
+
+// module.exports = async (req, res) => {
+//   if (req.method == 'POST') {
+//     const { query, variables } = req.body
+//     graphqlOwO.run(query, variables).then((rs) => {
+//       const data = rs.data
+//       res.send({ data } || {})
+//     })
+//   }
+// }

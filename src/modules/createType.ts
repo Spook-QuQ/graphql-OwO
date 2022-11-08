@@ -3,7 +3,26 @@ import { GraphQLObjectType } from 'graphql'
 import toPascal from './toPascal.js'
 import createFields from './createFields.js'
 
-const createType = (name, data, description, option) => {
+import {
+  SupportedTypes,
+} from './objectTypeDetector.js'
+
+export type Field =
+  | SupportedTypes
+  | Array<SupportedTypes>
+  | Array<Field>
+  | { [keyname: string]: Field }
+
+const createType = (
+  name: string,
+  data: Field,
+  description: string,
+  option: {
+    matchWithTypeName?: boolean
+    nonNull?: boolean
+    idTypeOff?: boolean
+  },
+) => {
   const { matchWithTypeName, nonNull, idTypeOff } = option || {}
 
   const pascalName = toPascal(name)
@@ -14,8 +33,8 @@ const createType = (name, data, description, option) => {
     fields: createFields(data, {
       useIDType: !idTypeOff,
       matchWithTypeName,
-      nonNull
-    })
+      nonNull,
+    }),
   })
 }
 
