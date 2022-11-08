@@ -1,11 +1,7 @@
-const {
-  GraphQLObjectType,
-  GraphQLID,
-  GraphQLList,
-} = require('graphql')
+import { GraphQLObjectType, GraphQLID, GraphQLList } from 'graphql'
 
-const toPascal = require('./toPascal.js')
-const objectTypeDetector = require('./objectTypeDetector.js')
+import toPascal from './toPascal.js'
+import objectTypeDetector from './objectTypeDetector.js'
 
 const createFields = (data, option) => {
   const { useIDType, matchWithTypeName } = option || {}
@@ -49,4 +45,4 @@ const createFields = (data, option) => {
   }, {})
 }
 
-module.exports = createFields
+export default createFields

@@ -1,9 +1,7 @@
-const {
-  GraphQLObjectType
-} = require('graphql')
+import { GraphQLObjectType } from 'graphql'
 
-const toPascal = require('./toPascal.js')
-const createFields = require('./createFields.js')
+import toPascal from './toPascal.js'
+import createFields from './createFields.js'
 
 const createType = (name, data, description, option) => {
   const { matchWithTypeName, nonNull, idTypeOff } = option || {}
@@ -21,4 +19,4 @@ const createType = (name, data, description, option) => {
   })
 }
 
-module.exports = createType
+export default createType
