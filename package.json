@@ -1,10 +1,19 @@
 {
-  "name": "graphql-owo",
-  "version": "0.0.1",
-  "description": "It's a priginal wrapper of GraphQL",
-  "main": "index.js",
+  "name": "@spook-quq/graphql",
+  "version": "0.0.0",
+  "description": "This is an original graphql wrapper",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "graphql": "^16.6.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p ./tsconfig.json",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -12,19 +21,18 @@
   },
   "keywords": [
     "graphql",
-    "node.js",
-    "javascript"
+    "quq"
   ],
-  "author": "spook-QuQ",
+  "author": "Spook-QuQ",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/spook-QuQ/graphql-OwO/issues"
   },
   "homepage": "https://github.com/spook-QuQ/graphql-OwO#readme",
-  "dependencies": {
-    "graphql": "^16.6.0"
-  },
   "devDependencies": {
-    "@types/node": "^18.11.9"
+    "@types/node": "^18.11.9",
+    "express": "^4.18.2",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
   }
 }

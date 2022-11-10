@@ -9,13 +9,15 @@ import {
   GraphQLObjectType,
   ExecutionResult,
   GraphQLList,
+  ThunkObjMap,
+  GraphQLFieldConfig,
 } from 'graphql'
 
 import { SupportedTypes } from './modules/objectTypeDetector.js'
 import createType, { Field } from './modules/createType.js'
 import createArgs, { ArgumentsType } from './modules/createArgs.js'
 
-export type ArgumentsField<T = any> = {
+export type ArgumentsField = {
   [keyname: string]: {
     type:
       | SupportedTypes
@@ -29,7 +31,7 @@ type Resolver<T = any> = (args: T) => any
 type ListResolver<T = any> = (args: T) => Array<any>
 
 export type QueryType = {
-  name?: string
+  name: string
   idTypeOff?: boolean
   description?: string
   typeDescription?: string
@@ -55,23 +57,23 @@ export type Schema = {
 
 const createRootType = (
   types: QueryType[],
-  option: { isMutation?: boolean },
+  option: { isMutation?: boolean } | null,
   description: string,
 ) => {
   const { isMutation } = option || {}
 
   type Context = {
     type: GraphQLObjectType<any, any>
-    description: string
-    args: ArgumentsType
-    resolver: Resolver<ArgumentsType>
+    description: string | undefined
+    args: ArgumentsType | null
+    resolver: Resolver<ArgumentsType> | null // 🍄
   }
 
   type ContxtForPlural = {
     type: GraphQLList<GraphQLObjectType<any, any>>
-    description: string
+    description: string | undefined
     args: ArgumentsType
-    resolver: ListResolver<ArgumentsType>
+    resolver: ListResolver<ArgumentsType> | null // 🍄
   }
 
   type RsQueries = {
@@ -82,16 +84,17 @@ const createRootType = (
     const args = Object.keys(type.args || {}).length
       ? createArgs(type.args)
       : null
-    const ctx = {
+    const ctx: Context = {
       type: createType(type.name, type.fields, type.typeDescription, {
         matchWithTypeName: true,
         idTypeOff: type.idTypeOff,
       }),
       description: type.description,
       args,
-      resolve:
+      // 🍄
+      resolver:
         typeof type.resolver === 'function'
-          ? (((_, args) => {
+          ? (((_: any, args: any) => {
               return type.resolver(args)
             }) as Resolver)
           : null,
@@ -100,13 +103,14 @@ const createRootType = (
     rsQuery[type.name] = ctx
 
     if (type.list) {
-      const ctxForPlural = {
+      const ctxForPlural: ContxtForPlural = {
         type: new GraphQLList(ctx.type),
         description: type.listDescription,
         args: createArgs(type.listArgs),
-        resolve:
+        // 🍄
+        resolver:
           typeof type.listResolver === 'function'
-            ? (((_, args) => {
+            ? (((_: any, args: any) => {
                 return type.resolver(args)
               }) as ListResolver)
             : null,
@@ -116,12 +120,12 @@ const createRootType = (
     }
 
     return rsQuery
-  }, {})
+  }, {} as { [x: string]: any })
 
   return new GraphQLObjectType({
     name: isMutation ? 'Mutation' : 'Query',
     description,
-    fields: rsQueries,
+    fields: rsQueries as ThunkObjMap<GraphQLFieldConfig<any, any, any>>, // 🍄
   })
 }
 
@@ -148,13 +152,18 @@ const createSchema = (
 export default class GraphqlOwO {
   run: (_query: any, _variables: any) => Promise<any>
 
+  [THIS:symbol]: {
+    schema: GraphQLSchema
+  }
+
   constructor(_schema: Schema) {
     const THIS = Symbol('THIS')
-    this[THIS] = {}
 
     const { query, mutation, description } = _schema
 
-    this[THIS].schema = createSchema(query, mutation, description)
+    this[THIS] = {
+      schema: createSchema(query, mutation, description)
+    }
 
     this.run = async (_query, _variables /* ← request variables */) => {
       return await graphql({
@@ -166,7 +175,7 @@ export default class GraphqlOwO {
   }
 }
 
-export const graphiqlHTML = (url) => {
+export const graphiqlHTML = (url: string) => {
   const html = fs.readFileSync(
     path.resolve(__dirname, './static/graphiql.html'),
   )

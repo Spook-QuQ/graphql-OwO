@@ -38,9 +38,9 @@ export type ArgumentsType = {
 
 const createArgs = (args: {
   [x: string]: any
-}): ArgumentsType => {
+} | undefined): ArgumentsType => {
   if (!args) return {}
-  return Object.keys(args).reduce((rsArgs, argName) => {
+  return Object.keys(args).reduce((rsArgs: ArgumentsType, argName) => {
     const targetArg = args[argName]
     const pascalName = toPascal(argName)
 

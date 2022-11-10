@@ -9,14 +9,13 @@ import {
 
 export type Field =
   | SupportedTypes
-  | Array<SupportedTypes>
-  | Array<Field>
-  | { [keyname: string]: Field }
+  | SupportedTypes[]
+  | { [keyname: string]: Field | Field[] }
 
 const createType = (
   name: string,
-  data: Field,
-  description: string,
+  data: Field | Field[],
+  description: string | undefined,
   option: {
     matchWithTypeName?: boolean
     nonNull?: boolean

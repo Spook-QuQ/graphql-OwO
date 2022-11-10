@@ -1,8 +1,8 @@
 "use strict";
-exports.__esModule = true;
-var graphql_1 = require("graphql");
-var typeDetector = function (type) {
-    var rs;
+Object.defineProperty(exports, "__esModule", { value: true });
+const graphql_1 = require("graphql");
+const typeDetector = (type) => {
+    let rs;
     switch (type.toLowerCase()) {
         case 'id':
             rs = graphql_1.GraphQLID;
@@ -28,16 +28,16 @@ var typeDetector = function (type) {
     }
     return rs;
 };
-var objectTypeDetector = function (val, option) {
-    var _a = option || {}, matchWithTypeName = _a.matchWithTypeName, nonNull = _a.nonNull, isList = _a.isList;
-    var type;
+const objectTypeDetector = (val, option) => {
+    const { matchWithTypeName, nonNull, isList } = option || {};
+    let type;
     if (matchWithTypeName)
         type = val;
     else
         type = typeof val;
-    var rsType = typeDetector(type.toLowerCase());
-    var typeCtx = isList ? new graphql_1.GraphQLList(rsType) : rsType;
-    var typeCtx_ = nonNull ? new graphql_1.GraphQLNonNull(typeCtx) : typeCtx;
+    const rsType = typeDetector(type.toLowerCase());
+    const typeCtx = isList ? new graphql_1.GraphQLList(rsType) : rsType;
+    const typeCtx_ = nonNull ? new graphql_1.GraphQLNonNull(typeCtx) : typeCtx;
     return { type: typeCtx_ };
 };
-exports["default"] = objectTypeDetector;
+exports.default = objectTypeDetector;

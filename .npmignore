@@ -1,0 +1,7 @@
+/src/**/*
+.DS_Store
+.prettierrc
+.vscode
+tsconfig.backup.json
+/test
+/sample

@@ -56,14 +56,18 @@ const schema: Schema = {
         testList: { type: [{ testKey: { type: ['string'], nonNull: true } }] },
         testList2: { type: ['string'], nonNull: true },
         test: {
-          type: {a: { type: {
-              d: { type: 'string' },
-              c: {
-                type: { e: { type: 'int', nonNull: false } },
-                nonNull: true,
-              },},
+          type: {
+            a: {
+              type: {
+                d: { type: 'string' },
+                c: {
+                  type: { e: { type: 'int', nonNull: false } },
+                  nonNull: true,
+                },
+              },
               nonNull: true,
-            }, b: { type: 'string', nonNull: false }
+            },
+            b: { type: 'string', nonNull: false },
           },
           nonNull: true,
         },
